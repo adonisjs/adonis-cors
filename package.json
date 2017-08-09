@@ -20,8 +20,9 @@
   "author": "virk",
   "license": "MIT",
   "devDependencies": {
-    "@adonisjs/sink": "^1.0.11",
+    "@adonisjs/sink": "^1.0.12",
     "coveralls": "^2.13.1",
+    "cz-conventional-changelog": "^2.0.0",
     "japa": "^1.0.3",
     "japa-cli": "^1.0.1",
     "nyc": "^11.1.0",
@@ -33,5 +34,26 @@
       "src",
       "test"
     ]
-  }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "bin": {
+    "cors": "index.js"
+  },
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adonisjs/adonis-cors.git"
+  },
+  "bugs": {
+    "url": "https://github.com/adonisjs/adonis-cors/issues"
+  },
+  "homepage": "https://github.com/adonisjs/adonis-cors#readme"
 }
