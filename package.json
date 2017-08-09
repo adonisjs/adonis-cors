@@ -20,7 +20,7 @@
   "author": "virk",
   "license": "MIT",
   "devDependencies": {
-    "@adonisjs/sink": "^1.0.11",
+    "@adonisjs/sink": "^1.0.12",
     "coveralls": "^2.13.1",
     "cz-conventional-changelog": "^2.0.0",
     "japa": "^1.0.3",
