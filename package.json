@@ -22,6 +22,7 @@
   "devDependencies": {
     "@adonisjs/sink": "^1.0.11",
     "coveralls": "^2.13.1",
+    "cz-conventional-changelog": "^2.0.0",
     "japa": "^1.0.3",
     "japa-cli": "^1.0.1",
     "nyc": "^11.1.0",
@@ -33,5 +34,10 @@
       "src",
       "test"
     ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
