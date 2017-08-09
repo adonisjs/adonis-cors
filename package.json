@@ -1,0 +1,37 @@
+{
+  "name": "@adonisjs/cors",
+  "version": "1.0.0",
+  "description": "CORS middleware for Adonisjs",
+  "main": "index.js",
+  "scripts": {
+    "lint": "standard",
+    "pretest": "npm run lint",
+    "posttest": "npm run coverage",
+    "test:local": "FORCE_COLOR=true node bin/index.js --local",
+    "test": "nyc npm run test:local",
+    "test:win": "set FORCE_COLOR=true && node bin/index.js --win",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "keywords": [
+    "adonisjs",
+    "adonis-framework",
+    "cors"
+  ],
+  "author": "virk",
+  "license": "MIT",
+  "devDependencies": {
+    "@adonisjs/sink": "^1.0.11",
+    "coveralls": "^2.13.1",
+    "japa": "^1.0.3",
+    "japa-cli": "^1.0.1",
+    "nyc": "^11.1.0",
+    "semver": "^5.4.1",
+    "standard": "^10.0.3"
+  },
+  "nyc": {
+    "include": [
+      "src",
+      "test"
+    ]
+  }
+}
