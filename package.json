@@ -40,9 +40,6 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "bin": {
-    "cors": "index.js"
-  },
   "directories": {
     "example": "example",
     "test": "test"
