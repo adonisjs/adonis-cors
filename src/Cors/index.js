@@ -47,7 +47,7 @@ class Cors {
      * returning true.
      */
     return allowedOrigins === true || allowedOrigins === '*'
-    ? origin
+    ? '*'
     : (allowedOrigins instanceof Array === true ? allowedOrigins.join(',') : allowedOrigins)
   }
 
