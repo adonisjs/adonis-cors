@@ -27,6 +27,34 @@ class Cors {
   }
 
   /**
+   * Finds if an origin is allowed in the list of
+   * allowed origins
+   *
+   * @method _isOriginAllowed
+   *
+   * @param {String} origin
+   * @param {Array} allowedOrigins
+   *
+   * @private
+   */
+  _isOriginAllowed (origin, allowedOrigins) {
+    const originsLength = allowedOrigins.length
+    for (let i = 0; i < originsLength; i++) {
+      const allowedOrigin = allowedOrigins[i]
+
+      if (typeof (allowedOrigin) === 'string' && origin === allowedOrigin) {
+        return true
+      }
+
+      if (allowedOrigin instanceof RegExp && allowedOrigin.test(origin)) {
+        return true
+      }
+    }
+
+    return false
+  }
+
+  /**
    * Returns the origin to be allowed for CORS
    *
    * @method _getOrigin
@@ -38,17 +66,47 @@ class Cors {
    * @private
    */
   _getOrigin (origin) {
-    const allowedOrigins = typeof (this.options.origin) === 'function'
-    ? this.options.origin(origin)
-    : this.options.origin
+    /**
+     * Allow all
+     */
+    if (this.options.origin === '*') {
+      return '*'
+    }
 
     /**
-     * We allow the current origin when allowedOrigins is a boolean
-     * returning true.
+     * If regex then test current origin against the regex
      */
-    return allowedOrigins === true || allowedOrigins === '*'
-    ? origin
-    : (allowedOrigins instanceof Array === true ? allowedOrigins.join(',') : allowedOrigins)
+    if (this.options.origin instanceof RegExp && this._isOriginAllowed(origin, [this.options.origin])) {
+      return origin
+    }
+
+    /**
+     * If allowed origins is a string, then split the string by comma
+     * and if one matches.
+     */
+    if (typeof (this.options.origin) === 'string') {
+      const isAllowed = this._isOriginAllowed(origin, this.options.origin.split(','))
+      return isAllowed ? origin : false
+    }
+
+    /**
+     * If allowed origins are defined as array then find if one
+     * matches.
+     */
+    if (Array.isArray(this.options.origin)) {
+      const isAllowed = this._isOriginAllowed(origin, this.options.origin)
+      return isAllowed ? origin : false
+    }
+
+    /**
+     * If it's a function then the developer decide whether
+     * to allow or not
+     */
+    if (typeof (this.options.origin) === 'function') {
+      return this.options.origin(origin) ? origin : false
+    }
+
+    return this.options.origin === true
   }
 
   /**
@@ -87,7 +145,13 @@ class Cors {
    * @private
    */
   _setOrigin (origin, response) {
-    response.header('Access-Control-Allow-Origin', this._getOrigin(origin))
+    const allowedOrigin = this._getOrigin(origin)
+
+    if (typeof (allowedOrigin) === 'string' && allowedOrigin !== '*') {
+      response.vary('Origin')
+    }
+
+    response.header('Access-Control-Allow-Origin', allowedOrigin === true ? origin : allowedOrigin)
     return this
   }
 
