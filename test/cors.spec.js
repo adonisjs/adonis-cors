@@ -15,47 +15,63 @@ const { Config } = require('@adonisjs/sink')
 const Cors = require('../src/Cors')
 
 test.group('Cors', () => {
-  test('return current origin when options.origin is true', (assert) => {
+  test('return true when options.origin is true', (assert) => {
     const config = new Config()
     config.set('cors.origin', true)
     const cors = new Cors(config)
-    assert.equal(cors._getOrigin('foo'), 'foo')
+    assert.isTrue(cors._getOrigin('foo'))
   })
 
-  test('return false when options.origin is false', (assert) => {
+  test('return null when options.origin is false', (assert) => {
     const config = new Config()
     const cors = new Cors(config)
     assert.isFalse(cors._getOrigin('foo'))
   })
 
-  test('return options.origin when its a string', (assert) => {
+  test('return options.origin when its a string and allows the current origin', (assert) => {
     const config = new Config()
     config.set('cors.origin', 'bar,baz')
     const cors = new Cors(config)
-    assert.equal(cors._getOrigin('foo'), 'bar,baz')
+    assert.equal(cors._getOrigin('bar'), 'bar')
   })
 
-  test('join origins when its an array', (assert) => {
+  test('join origins when its an array and allows the current origin', (assert) => {
     const config = new Config()
     config.set('cors.origin', ['bar', 'baz'])
     const cors = new Cors(config)
-    assert.equal(cors._getOrigin('foo'), 'bar,baz')
+    assert.equal(cors._getOrigin('bar'), 'bar')
   })
 
-  test('allow current origin when its a wildcard', (assert) => {
+  test('set value to * when a wildcard is defined', (assert) => {
     const config = new Config()
     config.set('cors.origin', '*')
     const cors = new Cors(config)
-    assert.equal(cors._getOrigin('foo'), 'foo')
+    assert.equal(cors._getOrigin('foo'), '*')
   })
 
-  test('return function value when options.origin is a function', (assert) => {
+  test('set false when origin function returns false', (assert) => {
     const config = new Config()
     config.set('cors.origin', function (origin) {
       return origin === 'bar'
     })
     const cors = new Cors(config)
     assert.isFalse(cors._getOrigin('foo'))
+  })
+
+  test('set current origin when function returns true', (assert) => {
+    const config = new Config()
+    config.set('cors.origin', function (origin) {
+      return origin === 'foo'
+    })
+    const cors = new Cors(config)
+    assert.equal(cors._getOrigin('foo'), 'foo')
+  })
+
+  test('set current origin when regex passes', (assert) => {
+    const config = new Config()
+    config.set('cors.origin', /[a-z]+\.adonisjs\.com/)
+    const cors = new Cors(config)
+    assert.equal(cors._getOrigin('edge.adonisjs.com'), 'edge.adonisjs.com')
   })
 
   test('return current headers when options.headers is true', (assert) => {
@@ -341,5 +357,218 @@ test.group('Cors', () => {
       { key: 'Content-length', value: 0 }
     ])
     assert.equal(response._status, 204)
+  })
+
+  test('set vary header when options.origin is a string', async (assert) => {
+    const config = new Config()
+    config.set('cors.origin', 'foo')
+    const cors = new Cors(config)
+
+    const response = {
+      headers: [],
+      header (key, value) {
+        this.headers.push({ key, value })
+      },
+      vary (value) {
+        this.headers.push({ key: 'Vary', value })
+      }
+    }
+
+    const request = {
+      method () {
+        return 'GET'
+      },
+      header (key) {
+        if (key === 'origin') {
+          return 'foo'
+        }
+        if (key === 'access-control-request-headers') {
+          return 'Authorization'
+        }
+      }
+    }
+
+    await cors.handle({ request, response }, function () {})
+    assert.deepEqual(response.headers, [
+      { key: 'Vary', value: 'Origin' },
+      { key: 'Access-Control-Allow-Origin', value: 'foo' }
+    ])
+  })
+
+  test('set vary header when options.origin is a regex', async (assert) => {
+    const config = new Config()
+    config.set('cors.origin', /foo/)
+    const cors = new Cors(config)
+
+    const response = {
+      headers: [],
+      header (key, value) {
+        this.headers.push({ key, value })
+      },
+      vary (value) {
+        this.headers.push({ key: 'Vary', value })
+      }
+    }
+
+    const request = {
+      method () {
+        return 'GET'
+      },
+      header (key) {
+        if (key === 'origin') {
+          return 'foo'
+        }
+        if (key === 'access-control-request-headers') {
+          return 'Authorization'
+        }
+      }
+    }
+
+    await cors.handle({ request, response }, function () {})
+    assert.deepEqual(response.headers, [
+      { key: 'Vary', value: 'Origin' },
+      { key: 'Access-Control-Allow-Origin', value: 'foo' }
+    ])
+  })
+
+  test('set vary header when options.origin is an array', async (assert) => {
+    const config = new Config()
+    config.set('cors.origin', ['foo'])
+    const cors = new Cors(config)
+
+    const response = {
+      headers: [],
+      header (key, value) {
+        this.headers.push({ key, value })
+      },
+      vary (value) {
+        this.headers.push({ key: 'Vary', value })
+      }
+    }
+
+    const request = {
+      method () {
+        return 'GET'
+      },
+      header (key) {
+        if (key === 'origin') {
+          return 'foo'
+        }
+        if (key === 'access-control-request-headers') {
+          return 'Authorization'
+        }
+      }
+    }
+
+    await cors.handle({ request, response }, function () {})
+    assert.deepEqual(response.headers, [
+      { key: 'Vary', value: 'Origin' },
+      { key: 'Access-Control-Allow-Origin', value: 'foo' }
+    ])
+  })
+
+  test('do not set vary header when options.origin is *', async (assert) => {
+    const config = new Config()
+    config.set('cors.origin', '*')
+    const cors = new Cors(config)
+
+    const response = {
+      headers: [],
+      header (key, value) {
+        this.headers.push({ key, value })
+      },
+      vary (value) {
+        this.headers.push({ key: 'Vary', value })
+      }
+    }
+
+    const request = {
+      method () {
+        return 'GET'
+      },
+      header (key) {
+        if (key === 'origin') {
+          return 'foo'
+        }
+        if (key === 'access-control-request-headers') {
+          return 'Authorization'
+        }
+      }
+    }
+
+    await cors.handle({ request, response }, function () {})
+    assert.deepEqual(response.headers, [
+      { key: 'Access-Control-Allow-Origin', value: '*' }
+    ])
+  })
+
+  test('do not set vary header when options.origin is true', async (assert) => {
+    const config = new Config()
+    config.set('cors.origin', true)
+    const cors = new Cors(config)
+
+    const response = {
+      headers: [],
+      header (key, value) {
+        this.headers.push({ key, value })
+      },
+      vary (value) {
+        this.headers.push({ key: 'Vary', value })
+      }
+    }
+
+    const request = {
+      method () {
+        return 'GET'
+      },
+      header (key) {
+        if (key === 'origin') {
+          return 'foo'
+        }
+        if (key === 'access-control-request-headers') {
+          return 'Authorization'
+        }
+      }
+    }
+
+    await cors.handle({ request, response }, function () {})
+    assert.deepEqual(response.headers, [
+      { key: 'Access-Control-Allow-Origin', value: 'foo' }
+    ])
+  })
+
+  test('do not set vary header when options.origin is false', async (assert) => {
+    const config = new Config()
+    config.set('cors.origin', false)
+    const cors = new Cors(config)
+
+    const response = {
+      headers: [],
+      header (key, value) {
+        this.headers.push({ key, value })
+      },
+      vary (value) {
+        this.headers.push({ key: 'Vary', value })
+      }
+    }
+
+    const request = {
+      method () {
+        return 'GET'
+      },
+      header (key) {
+        if (key === 'origin') {
+          return 'foo'
+        }
+        if (key === 'access-control-request-headers') {
+          return 'Authorization'
+        }
+      }
+    }
+
+    await cors.handle({ request, response }, function () {})
+    assert.deepEqual(response.headers, [
+      { key: 'Access-Control-Allow-Origin', value: false }
+    ])
   })
 })
