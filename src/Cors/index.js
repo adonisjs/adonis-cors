@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
 */
 
-const defaultConfig = require('../../example/cors.js')
+const defaultConfig = require('../../config/cors.js')
 
 /**
  * Cors class to work as a middleware and set CORS headers
