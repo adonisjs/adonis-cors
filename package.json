@@ -1,6 +1,6 @@
 {
   "name": "@adonisjs/cors",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "CORS middleware for Adonisjs",
   "main": "index.js",
   "scripts": {
