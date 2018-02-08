@@ -571,4 +571,35 @@ test.group('Cors', () => {
       { key: 'Access-Control-Allow-Origin', value: false }
     ])
   })
+
+  test('work fine when origin is null', async (assert) => {
+    const config = new Config()
+    config.set('cors.credentials', true)
+    config.set('cors.origin', true)
+
+    const cors = new Cors(config)
+
+    const response = {
+      headers: [],
+      header (key, value) {
+        this.headers.push({ key, value })
+      }
+    }
+
+    const request = {
+      method () {
+        return 'GET'
+      },
+      header (key) {
+        if (key === 'access-control-request-headers') {
+          return 'Authorization'
+        }
+      }
+    }
+
+    await cors.handle({ request, response }, function () {})
+    assert.deepEqual(response.headers, [
+      { key: 'Access-Control-Allow-Credentials', value: true }
+    ])
+  })
 })

@@ -145,6 +145,10 @@ class Cors {
    * @private
    */
   _setOrigin (origin, response) {
+    if (!origin) {
+      return this
+    }
+
     const allowedOrigin = this._getOrigin(origin)
 
     if (typeof (allowedOrigin) === 'string' && allowedOrigin !== '*') {
