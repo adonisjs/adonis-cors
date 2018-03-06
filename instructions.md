@@ -16,9 +16,8 @@ The next thing is to register the middleware globally. Make sure `Cors` middlewa
 The middleware is registered inside `start/kernel.js` file.
 
 ```js
-const globalMiddleware = [
-  'Adonis/Middleware/Cors'
-]
+Server
+  .use(['Adonis/Middleware/Cors'])
 ```
 
 ## Config
