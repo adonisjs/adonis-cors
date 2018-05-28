@@ -238,7 +238,7 @@ class Cors {
   }
 
   /**
-   * Set `Access-Control-Allow-Max-Age` header only when `maxAge`
+   * Set `Access-Control-Max-Age` header only when `maxAge`
    * is defined inside the config file.
    *
    * @method _setMaxAge
@@ -249,7 +249,7 @@ class Cors {
    */
   _setMaxAge (response) {
     if (this.options.maxAge) {
-      response.header('Access-Control-Allow-Max-Age', this.options.maxAge)
+      response.header('Access-Control-Max-Age', this.options.maxAge)
     }
     return this
   }

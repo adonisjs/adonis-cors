@@ -278,7 +278,7 @@ test.group('Cors', () => {
       }
     }
     cors._setMaxAge(response)
-    assert.deepEqual(response.headers, { key: 'Access-Control-Allow-Max-Age', value: 90 })
+    assert.deepEqual(response.headers, { key: 'Access-Control-Max-Age', value: 90 })
   })
 
   test('do not set specific headers when request is not options', async (assert) => {
@@ -353,7 +353,7 @@ test.group('Cors', () => {
       { key: 'Access-Control-Allow-Credentials', value: true },
       { key: 'Access-Control-Allow-Methods', value: 'GET,PUT,POST' },
       { key: 'Access-Control-Allow-Headers', value: 'Authorization' },
-      { key: 'Access-Control-Allow-Max-Age', value: 90 },
+      { key: 'Access-Control-Max-Age', value: 90 },
       { key: 'Content-length', value: 0 }
     ])
     assert.equal(response._status, 204)
