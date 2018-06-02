@@ -1,3 +1,13 @@
+<a name="1.0.6"></a>
+## [1.0.6](https://github.com/adonisjs/adonis-cors/compare/v1.0.5...v1.0.6) (2018-06-02)
+
+
+### Bug Fixes
+
+* **cors:** fix incorrect header name ([ca249ea](https://github.com/adonisjs/adonis-cors/commit/ca249ea))
+
+
+
 <a name="1.0.5"></a>
 ## [1.0.5](https://github.com/adonisjs/adonis-cors/compare/v1.0.3...v1.0.5) (2018-02-08)
 
