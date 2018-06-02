@@ -80,7 +80,7 @@ module.exports = {
   | MaxAge
   |--------------------------------------------------------------------------
   |
-  | Define Access-Control-Allow-Max-Age
+  | Define Access-Control-Max-Age
   |
   */
   maxAge: 90

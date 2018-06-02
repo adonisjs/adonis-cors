@@ -122,16 +122,16 @@ class Cors {
    */
   _getHeaders (headers) {
     const allowedHeaders = typeof (this.options.headers) === 'function'
-    ? this.options.headers(headers)
-    : this.options.headers
+      ? this.options.headers(headers)
+      : this.options.headers
 
     /**
      * We allow the current headers when allowedHeaders is a boolean
      * returning true.
      */
     return allowedHeaders === true || allowedHeaders === '*'
-    ? headers
-    : (allowedHeaders instanceof Array === true ? allowedHeaders.join(',') : allowedHeaders)
+      ? headers
+      : (allowedHeaders instanceof Array === true ? allowedHeaders.join(',') : allowedHeaders)
   }
 
   /**
@@ -188,8 +188,8 @@ class Cors {
    */
   _setExposeHeaders (response) {
     const exposeHeaders = this.options.exposeHeaders instanceof Array === true
-    ? this.options.exposeHeaders.join(',')
-    : this.options.exposeHeaders
+      ? this.options.exposeHeaders.join(',')
+      : this.options.exposeHeaders
 
     if (typeof (exposeHeaders) === 'string' && exposeHeaders.trim()) {
       response.header('Access-Control-Expose-Headers', exposeHeaders)
@@ -209,8 +209,8 @@ class Cors {
    */
   _setMethods (response) {
     const methods = this.options.methods instanceof Array === true
-    ? this.options.methods.join(',')
-    : this.options.methods
+      ? this.options.methods.join(',')
+      : this.options.methods
 
     if (typeof (methods) === 'string' && methods.trim()) {
       response.header('Access-Control-Allow-Methods', methods)
@@ -238,7 +238,7 @@ class Cors {
   }
 
   /**
-   * Set `Access-Control-Allow-Max-Age` header only when `maxAge`
+   * Set `Access-Control-Max-Age` header only when `maxAge`
    * is defined inside the config file.
    *
    * @method _setMaxAge
@@ -249,7 +249,7 @@ class Cors {
    */
   _setMaxAge (response) {
     if (this.options.maxAge) {
-      response.header('Access-Control-Allow-Max-Age', this.options.maxAge)
+      response.header('Access-Control-Max-Age', this.options.maxAge)
     }
     return this
   }
