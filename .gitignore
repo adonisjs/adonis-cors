@@ -6,3 +6,6 @@ npm-debug.log
 out
 .nyc_output
 test/tmp
+yarn.lock
+shrinkwrap.yaml
+package-lock.json
