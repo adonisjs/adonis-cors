@@ -1,3 +1,8 @@
+<a name="1.0.7"></a>
+## [1.0.7](https://github.com/adonisjs/adonis-cors/compare/v1.0.6...v1.0.7) (2018-09-27)
+
+
+
 <a name="1.0.6"></a>
 ## [1.0.6](https://github.com/adonisjs/adonis-cors/compare/v1.0.5...v1.0.6) (2018-06-02)
 
