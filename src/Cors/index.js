@@ -272,20 +272,16 @@ class Cors {
       ._setExposeHeaders(response)
 
     /**
-     * If request is not for OPTIONS call next. Otherwise set
-     * CORS headers.
+     * If request is OPTIONS set CORS headers before call next.
      */
-    if (request.method() !== 'OPTIONS') {
-      await next()
-      return
+    if (request.method() === 'OPTIONS') {
+      this
+        ._setMethods(response)
+        ._setHeaders(request.header('access-control-request-headers'), response)
+        ._setMaxAge(response)
     }
 
-    this
-      ._setMethods(response)
-      ._setHeaders(request.header('access-control-request-headers'), response)
-      ._setMaxAge(response)
-
-    response.header('Content-length', 0).status(204).send('')
+    return next()
   }
 }
 
