@@ -353,10 +353,8 @@ test.group('Cors', () => {
       { key: 'Access-Control-Allow-Credentials', value: true },
       { key: 'Access-Control-Allow-Methods', value: 'GET,PUT,POST' },
       { key: 'Access-Control-Allow-Headers', value: 'Authorization' },
-      { key: 'Access-Control-Max-Age', value: 90 },
-      { key: 'Content-length', value: 0 }
+      { key: 'Access-Control-Max-Age', value: 90 }
     ])
-    assert.equal(response._status, 204)
   })
 
   test('set vary header when options.origin is a string', async (assert) => {
